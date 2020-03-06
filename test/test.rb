@@ -55,5 +55,41 @@ class AppTest < Minitest::Test
     body = JSON.parse last_response.body
 
     assert_equal body, {"one"=>1, "more"=>1, "to"=>1, "go"=>1}
+
+    try = { 'string' => 'Hello 4567 bye CDEF - cdef', 'regex' => '\s\h\h\h\h\s', 'opt' => '' }.to_json
+    post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
+    body = JSON.parse last_response.body
+
+    assert_equal body, {" 4567 "=>1, " CDEF "=>1}
+
+    try = { 'string' => 'the lazy cat sleeps', 'regex' => '\s...\s', 'opt' => '' }.to_json
+    post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
+    body = JSON.parse last_response.body
+
+    assert_equal body, {" cat "=>1}
+
+    try = { 'string' => "Kitchen Kaboodle\nReds and blues\nkitchen Servers", 'regex' => '[Kks]', 'opt' => '' }.to_json
+    post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
+    body = JSON.parse last_response.body
+
+    assert_equal body, {"K"=>2, "s"=>3, "k"=>1}
+
+    try = { 'string' => "Kitchen Kaboodle\nReds and blues\nkitchen Servers", 'regex' => '[Kks]', 'opt' => 'i' }.to_json
+    post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
+    body = JSON.parse last_response.body
+
+    assert_equal body, {"K"=>2, "s"=>3, "k"=>1, "S"=>1}
+
+    try = { 'string' => '0x1234abcd', 'regex' => "[^a-z]", 'opt' => 'i' }.to_json
+    post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
+    body = JSON.parse last_response.body
+
+    assert_equal body, {"0"=>1, "1"=>1, "2"=>1, "3"=>1, "4"=>1}
+
+    try = { 'string' => "The regex /[^a-z]/i matches", 'regex' => '\[\^[0-9A-Za-z]-[0-9A-Za-z]\]', 'opt' => '' }.to_json
+    post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
+    body = JSON.parse last_response.body
+
+    assert_equal body, {"[^a-z]"=>1}
   end
 end
