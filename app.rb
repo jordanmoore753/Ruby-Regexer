@@ -9,9 +9,7 @@ class Regexer
     rescue StandardError, RuntimeError, RegexpError => e
       return error_handle e.message
     else 
-      p regex
       res = str.scan(regex)
-      p res
       return converter res
     end
   end

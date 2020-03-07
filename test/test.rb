@@ -91,5 +91,35 @@ class AppTest < Minitest::Test
     body = JSON.parse last_response.body
 
     assert_equal body, {"[^a-z]"=>1}
+
+    try = { 'string' => "The lazy cat sleeps\nThe number 623 is not a cat\nThe Alaskan drives a snowcat", 'regex' => '\bcat$', 'opt' => '' }.to_json
+    post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
+    body = JSON.parse last_response.body
+
+    assert_equal body, {"cat"=>1}
+
+    try = { 'string' => "A loud dog", 'regex' => '^(A|The) [a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z] (dog|cat)$', 'opt' => '' }.to_json
+    post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
+    body = JSON.parse last_response.body
+
+    assert_equal body, {"[\"A\", \"dog\"]"=>1}
+
+    try = { 'string' => "To be or not to be", 'regex' => '\bb[a-z]*e\b', 'opt' => '' }.to_json
+    post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
+    body = JSON.parse last_response.body
+
+    assert_equal body, {"be"=> 2}   
+
+    try = { 'string' => "What's up, doc?", 'regex' => '^.*\?$', 'opt' => '' }.to_json
+    post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
+    body = JSON.parse last_response.body
+
+    assert_equal body, {"What's up, doc?"=> 1}
+
+    try = { 'string' => "Mississippi", 'regex' => '\b[a-z]*i[a-z]*i[a-z]*i[a-z]*\b', 'opt' => 'i' }.to_json
+    post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
+    body = JSON.parse last_response.body
+
+    assert_equal body, {"Mississippi"=> 1}  
   end
 end
