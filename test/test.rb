@@ -17,6 +17,24 @@ class AppTest < Minitest::Test
     assert res
   end
 
+  def test_regexer_says_invalid
+    res = Regexer.new
+
+    assert_equal res.is_invalid?('/invalid/'), true
+    assert_equal res.is_invalid?('invalid'), false
+    assert_equal res.is_invalid?('//invalid/'), true
+    assert_equal res.is_invalid?('\/invalid'), false
+    assert_equal res.is_invalid?('inv/alid'), true
+    assert_equal res.is_invalid?('inv\/alid'), false
+  end
+
+  def test_regexer_handles_error
+    res = Regexer.new
+
+    assert_equal res.error_handle('Invalid.'), { 'ERROR_915_JM_111' => 'Invalid.' }.to_json
+    assert_equal res.error_handle('target of repeat operator is not specified: /+/'), { 'ERROR_915_JM_111' => 'target of repeat operator is not specified: /+/' }.to_json
+  end
+
   def test_invalid_regex
     try = { 'string' => 'test', 'regex' => '+', 'opt' => '' }.to_json
     post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
@@ -120,6 +138,18 @@ class AppTest < Minitest::Test
     post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
     body = JSON.parse last_response.body
 
-    assert_equal body, {"Mississippi"=> 1}  
+    assert_equal body, {"Mississippi"=> 1}
+
+    try = { 'string' => "blueberry\nblackberry\nblack berry", 'regex' => '(blue|black)berry', 'opt' => 'i' }.to_json
+    post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
+    body = JSON.parse last_response.body
+
+    assert_equal body, {"[\"blue\"]"=>1, "[\"black\"]"=>1} 
+
+    try = { 'string' => "Hello 4567 bye CDEF - cdef", 'regex' => '\s\h\h\h\h\s', 'opt' => 'i' }.to_json
+    post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
+    body = JSON.parse last_response.body
+
+    assert_equal body, {' 4567 '=> 1, ' CDEF '=> 1} 
   end
 end
