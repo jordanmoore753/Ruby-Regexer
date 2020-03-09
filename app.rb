@@ -82,6 +82,10 @@ class Regexer
   end
 end
 
+configure do
+  enable :cross_origin
+end
+
 before do 
   request.body.rewind
   @request_payload = JSON.parse request.body.read
