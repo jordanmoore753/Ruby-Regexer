@@ -108,7 +108,7 @@ post "/test" do
   return tester.scan_string(string, regex, option)
 end
 
-options '*' do
+options "*" do
   response.headers["Allow"] = "GET, PUT, POST, DELETE, OPTIONS"
   response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type, Accept, X-User-Email, X-Auth-Token"
   response.headers["Access-Control-Allow-Origin"] = "*"
