@@ -83,12 +83,17 @@ class Regexer
   end
 end
 
-set :allow_origin, "*"
-set :allow_methods, "GET,HEAD,POST"
-
-before do 
+before do
+  headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+  headers['Access-Control-Allow-Origin'] = '*'
+  headers['Access-Control-Allow-Headers'] = 'accept, authorization, origin'
   request.body.rewind
   @request_payload = JSON.parse request.body.read
+end
+
+options '*' do
+  response.headers['Allow'] = 'HEAD,GET,PUT,DELETE,OPTIONS,POST'
+  response.headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Cache-Control, Accept'
 end
 
 post "/test" do 
