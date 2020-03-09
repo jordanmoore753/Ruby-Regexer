@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/cors'
 require 'json'
 
 class Regexer
@@ -82,9 +83,8 @@ class Regexer
   end
 end
 
-configure do
-  enable :cross_origin
-end
+set :allow_origin, "*"
+set :allow_methods, "GET,HEAD,POST"
 
 before do 
   request.body.rewind
