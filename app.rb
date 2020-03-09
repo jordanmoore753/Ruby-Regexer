@@ -90,9 +90,9 @@ configure do
 end
 
 before do
-  headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-  headers['Access-Control-Allow-Origin'] = '*'
-  headers['Access-Control-Allow-Headers'] = 'accept, authorization, origin'
+  response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+  response.headers['Access-Control-Allow-Origin'] = '*'
+  response.headers['Access-Control-Allow-Headers'] = 'accept, authorization, origin'
   request.body.rewind
   @request_payload = JSON.parse request.body.read
 end
