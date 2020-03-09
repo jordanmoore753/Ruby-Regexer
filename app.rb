@@ -92,12 +92,12 @@ end
 before do
   response.headers['Access-Control-Allow-Origin'] = '*'
   200
-  
-  request.body.rewind
-  @request_payload = JSON.parse request.body.read
 end
 
 post "/test" do 
+  request.body.rewind
+  @request_payload = JSON.parse request.body.read
+  
   regex = @request_payload['regex']
   string = @request_payload['string']
   option = @request_payload['opt']
