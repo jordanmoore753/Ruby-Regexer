@@ -83,17 +83,18 @@ class Regexer
   end
 end
 
+set :bind, '0.0.0.0'
+
+configure do
+  enable :cross_origin
+end
+
 before do
   headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
   headers['Access-Control-Allow-Origin'] = '*'
   headers['Access-Control-Allow-Headers'] = 'accept, authorization, origin'
   request.body.rewind
   @request_payload = JSON.parse request.body.read
-end
-
-options '*' do
-  response.headers['Allow'] = 'HEAD,GET,PUT,DELETE,OPTIONS,POST'
-  response.headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Cache-Control, Accept'
 end
 
 post "/test" do 
@@ -105,4 +106,9 @@ post "/test" do
 
   return tester.error_handle 'forward slashes must be escaped.' if tester.is_invalid? regex
   return tester.scan_string(string, regex, option)
+end
+
+options '*' do
+  response.headers['Allow'] = 'HEAD,GET,PUT,DELETE,OPTIONS,POST'
+  response.headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Cache-Control, Accept'
 end
