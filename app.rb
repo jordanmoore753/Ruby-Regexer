@@ -1,5 +1,5 @@
 require 'sinatra'
-require 'sinatra/cors'
+require 'sinatra/cross_origin'
 require 'json'
 
 class Regexer

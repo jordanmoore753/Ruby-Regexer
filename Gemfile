@@ -2,6 +2,8 @@ source "https://rubygems.org"
 
 ruby "2.6.5"
 gem "sinatra", "~>1.4.7"
+gem 'sinatra-cors', '~> 1.1'
+gem "sinatra-cross_origin"
 gem "sinatra-contrib"
 gem "json"
 gem "minitest"

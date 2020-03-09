@@ -24,6 +24,8 @@ GEM
       rack-test
       sinatra (~> 1.4.0)
       tilt (>= 1.3, < 3)
+    sinatra-cors (1.1.0)
+    sinatra-cross_origin (0.4.0)
     tilt (2.0.10)
 
 PLATFORMS
@@ -36,6 +38,8 @@ DEPENDENCIES
   rack (>= 1.6.12)
   sinatra (~> 1.4.7)
   sinatra-contrib
+  sinatra-cors (~> 1.1)
+  sinatra-cross_origin
 
 RUBY VERSION
    ruby 2.6.5p114
