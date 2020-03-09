@@ -90,12 +90,10 @@ configure do
 end
 
 before do
-
-  response.headers['Access-Control-Allow-Origin'] = '*'
-
-
   request.body.rewind
   @request_payload = JSON.parse request.body.read
+  response.headers['Access-Control-Allow-Origin'] = '*'
+  200
 end
 
 post "/test" do 
