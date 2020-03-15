@@ -10,8 +10,9 @@ class Regexer
     rescue StandardError, RuntimeError, RegexpError => e
       return error_handle e.message
     else 
+      newString = str.gsub(regex, '<span class="highlight">\0</span>')
       res = str.scan(regex)
-      return converter res
+      return converter res, newString
     end
   end
 
@@ -68,17 +69,19 @@ class Regexer
     str
   end
 
-  def converter(matches)
-    ret = {}
+  def converter(matches, s)
+    ret = { 'match': s } 
+    groups = {}
 
     matches.each do |x|
-      if ret[x] == nil
-        ret[x] = 0
+      if groups[x] == nil
+        groups[x] = 0
       end
 
-      ret[x] += 1
+      groups[x] += 1
     end
 
+    ret['groups'] = groups
     ret.to_json   
   end
 end
@@ -97,7 +100,7 @@ end
 post "/test" do 
   request.body.rewind
   @request_payload = JSON.parse request.body.read
-  
+
   regex = @request_payload['regex']
   string = @request_payload['string']
   option = @request_payload['opt']
@@ -105,7 +108,7 @@ post "/test" do
   tester = Regexer.new
 
   return tester.error_handle 'forward slashes must be escaped.' if tester.is_invalid? regex
-  return tester.scan_string(string, regex, option)
+  tester.scan_string(string, regex, option)
 end
 
 options "*" do
