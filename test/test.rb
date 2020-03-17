@@ -152,5 +152,12 @@ class AppTest < Minitest::Test
 
     assert_equal body['match'], ["<p><span class=\"highlight\">Mississippi</span></p>", "<p>Atlanta</p>"]
     assert_equal body['groups'], {}
+
+    try = { 'string' => ["String to match.", "", "String!"], 'regex' => 'String', 'opt' => '' }.to_json
+    post '/test', try, { 'CONTENT-TYPE' => 'application/json'}
+    body = JSON.parse last_response.body
+
+    assert_equal body['match'], ["<p><span class=\"highlight\">String</span> to match.</p>", "<br>", "<p><span class=\"highlight\">String</span>!</p>"]
+    assert_equal body['groups'], {}
   end
 end

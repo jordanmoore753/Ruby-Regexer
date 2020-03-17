@@ -93,9 +93,13 @@ class Regexer
     matches = []
 
     s.each do |str|
-      a = '<p>'
-      a += str + '</p>'
-      matches.push a
+      if str == ''
+        matches.push('<br>')
+      else
+        a = '<p>'
+        a += str + '</p>'
+        matches.push a
+      end
     end
 
     ret['groups'] = m
