@@ -10,8 +10,19 @@ class Regexer
     rescue StandardError, RuntimeError, RegexpError => e
       return error_handle e.message
     else 
-      newString = str.gsub(regex, '<span class="highlight">\0</span>')
-      res = str.scan(regex)
+      newString = []
+      
+      str.each do |s|
+        newString.push s.gsub(regex, '<span class="highlight">\0</span>')
+      end
+
+      res = []
+
+      str.each do |s|
+        res.push s.scan(regex)
+      end
+
+      res = get_capture_groups res
       return converter res, newString
     end
   end
@@ -69,19 +80,26 @@ class Regexer
     str
   end
 
-  def converter(matches, s)
-    ret = { 'match': s } 
-    groups = {}
+  def get_capture_groups(m)
+    res = {}
 
-    matches.each do |x|
-      if groups[x] == nil
-        groups[x] = 0
-      end
+    m.each { |s| s.each { |x| res[x] = 1 } if s[0].is_a? Array }
 
-      groups[x] += 1
+    res
+  end
+
+  def converter(m, s)
+    ret = {} 
+    matches = []
+
+    s.each do |str|
+      a = '<p>'
+      a += str + '</p>'
+      matches.push a
     end
 
-    ret['groups'] = groups
+    ret['groups'] = m
+    ret['match'] = matches
     ret.to_json   
   end
 end
