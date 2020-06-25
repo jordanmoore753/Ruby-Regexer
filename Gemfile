@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 ruby "2.6.5"
-gem "sinatra", "~>1.4.7"
+gem "sinatra", "~>2.0.8"
 gem 'sinatra-cors', '~> 1.1'
 gem "sinatra-cross_origin"
 gem "sinatra-contrib"
